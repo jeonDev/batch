@@ -4,12 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
@@ -19,10 +24,12 @@ public class TestJobConfig {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
+    private final String filePath = "/Users/jjh/project/file/batch/";
 
     @Bean
     public Job testJob(Step testStep) {
         return new JobBuilder("testJob", jobRepository)
+                .incrementer(new RunIdIncrementer())
                 .start(testStep)
                 .build();
     }
@@ -49,14 +56,17 @@ public class TestJobConfig {
     }
 
     @Bean
-    public ItemReader<String> testReader() {
-        log.info("111");
-        return new ItemReader<String>() {
-            @Override
-            public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-                log.info("222");
-                return null;
-            }
-        };
+    @StepScope
+    public FlatFileItemReader<Test> testReader() {
+
+        return new FlatFileItemReaderBuilder<Test>()
+                .name("testReader")
+                .resource(new FileSystemResource(filePath + "TEST1"))
+                .encoding("UTF-8")
+                .delimited().delimiter(".")
+                .names("a", "b", "c", "d")
+                .targetType(Test.class)
+                .linesToSkip(0)
+                .build();
     }
 }
