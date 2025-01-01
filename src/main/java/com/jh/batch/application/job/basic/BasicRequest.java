@@ -1,6 +1,6 @@
-package com.jh.batch.application.job;
+package com.jh.batch.application.job.basic;
 
-import com.jh.batch.application.telegram.type.FixedLengthTelegram;
+import com.jh.batch.application.telegram.basic.type.FixedLengthTelegram;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Test {
+public class BasicRequest {
     @FixedLengthTelegram(start = 1, end = 4)
     private String a;
     @FixedLengthTelegram(start = 5, end = 8)

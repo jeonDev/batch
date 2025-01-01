@@ -1,6 +1,6 @@
-package com.jh.batch.application.telegram.reader;
+package com.jh.batch.application.telegram.basic.reader;
 
-import com.jh.batch.application.telegram.type.FixedLengthTelegram;
+import com.jh.batch.application.telegram.basic.type.FixedLengthTelegram;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
 import org.springframework.batch.item.file.transform.Range;

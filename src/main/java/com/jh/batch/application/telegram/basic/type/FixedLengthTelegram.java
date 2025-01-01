@@ -1,4 +1,4 @@
-package com.jh.batch.application.telegram.type;
+package com.jh.batch.application.telegram.basic.type;
 
 import java.lang.annotation.*;
 
