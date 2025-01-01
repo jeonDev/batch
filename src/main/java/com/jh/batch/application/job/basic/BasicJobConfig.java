@@ -2,6 +2,7 @@ package com.jh.batch.application.job.basic;
 
 import com.jh.batch.application.telegram.basic.reader.FixedLengthFieldSetMapper;
 import com.jh.batch.application.telegram.basic.reader.FixedLengthParser;
+import com.jh.batch.application.telegram.basic.reader.TelegramBasicItemReaderBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -56,12 +57,8 @@ public class BasicJobConfig {
 
     private FlatFileItemReader<BasicRequest> itemReader() {
 
-        return new FlatFileItemReaderBuilder<BasicRequest>()
-                .name("testReader")
-                .resource(new FileSystemResource(filePath)) // 파일 경로
-                .encoding("UTF-8") // 인코딩 설정
-                .lineTokenizer(FixedLengthParser.createTokenizer(BasicRequest.class))
-                .fieldSetMapper(new FixedLengthFieldSetMapper<>(BasicRequest.class))
+        return new TelegramBasicItemReaderBuilder<>("basicItemReader", BasicRequest.class)
+                .filePath(filePath)
                 .build();
     }
 
