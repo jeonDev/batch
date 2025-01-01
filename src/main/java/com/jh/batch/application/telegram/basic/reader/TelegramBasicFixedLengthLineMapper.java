@@ -28,10 +28,11 @@ public class TelegramBasicFixedLengthLineMapper<T> implements LineMapper<T> {
             if (field.isAnnotationPresent(FixedLengthTelegram.class)) {
                 FixedLengthTelegram annotation = field.getAnnotation(FixedLengthTelegram.class);
                 int size = annotation.size();
+                int point = annotation.point();
                 TelegramFieldType fieldType = annotation.fieldType();
 
                 field.setAccessible(true);
-                field.set(instance, lineParser(fieldType, line, start, size));
+                field.set(instance, lineParser(fieldType, line, start, size, point));
 
                 start += size;
             }
@@ -39,7 +40,7 @@ public class TelegramBasicFixedLengthLineMapper<T> implements LineMapper<T> {
         return instance;
     }
 
-    private Object lineParser(TelegramFieldType fieldType, String line, int start, int size) {
+    private Object lineParser(TelegramFieldType fieldType, String line, int start, int size, int point) {
         int end = start + size;
 
         if (fieldType == TelegramFieldType.STRING) {
@@ -48,6 +49,12 @@ public class TelegramBasicFixedLengthLineMapper<T> implements LineMapper<T> {
             return Integer.parseInt(line.substring(start, end));
         } else if (fieldType == TelegramFieldType.DECIMAL) {
             String telegram = line.substring(start, end);
+            if (point > 0) {
+                String decimal = telegram.substring(0, size - point)
+                        .concat(".")
+                        .concat(telegram.substring(size - point));
+                return new BigDecimal(decimal);
+            }
             return new BigDecimal(telegram);
         } else {
             throw new IllegalArgumentException("fieldType Undefined");

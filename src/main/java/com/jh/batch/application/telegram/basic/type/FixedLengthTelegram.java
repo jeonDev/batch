@@ -8,5 +8,6 @@ import static com.jh.batch.application.telegram.basic.type.TelegramFieldType.STR
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FixedLengthTelegram {
     int size();
+    int point() default 0;
     TelegramFieldType fieldType() default STRING;
 }

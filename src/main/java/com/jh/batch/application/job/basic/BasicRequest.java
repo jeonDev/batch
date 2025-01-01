@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class BasicRequest {
     @FixedLengthTelegram(size = 4)
     private String a;
-    @FixedLengthTelegram(size = 4, fieldType = TelegramFieldType.DECIMAL)
+    @FixedLengthTelegram(size = 4, point = 2, fieldType = TelegramFieldType.DECIMAL)
     private BigDecimal b;
     @FixedLengthTelegram(size = 4, fieldType = TelegramFieldType.INTEGER)
     private Integer c;
