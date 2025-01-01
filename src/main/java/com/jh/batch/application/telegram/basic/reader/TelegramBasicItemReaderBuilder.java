@@ -2,6 +2,7 @@ package com.jh.batch.application.telegram.basic.reader;
 
 import com.jh.batch.application.job.basic.BasicRequest;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
@@ -13,13 +14,15 @@ public class TelegramBasicItemReaderBuilder<T> {
     private String name;
     private Resource resource;
     private String encoding = "UTF-8";
-    private LineTokenizer lineTokenizer;
-    private FieldSetMapper<T> fieldSetMapper;
+//    private LineTokenizer lineTokenizer;
+//    private FieldSetMapper<T> fieldSetMapper;
+    private LineMapper<T> lineMapper;
 
     public TelegramBasicItemReaderBuilder(String name, Class<T> type) {
         this.name = name;
-        lineTokenizer = FixedLengthParser.createTokenizer(type);
-        fieldSetMapper = new FixedLengthFieldSetMapper<>(type);
+        lineMapper = TelegramBasicFixedLengthLineMapper.of(type);
+//        lineTokenizer = FixedLengthParser.createTokenizer(type);
+//        fieldSetMapper = new FixedLengthFieldSetMapper<>(type);
     }
 
     public TelegramBasicItemReaderBuilder<T> filePath(String filePath) {
@@ -32,8 +35,9 @@ public class TelegramBasicItemReaderBuilder<T> {
                 .name(name)
                 .resource(resource)
                 .encoding(encoding)
-                .lineTokenizer(lineTokenizer)
-                .fieldSetMapper(fieldSetMapper)
+                .lineMapper(lineMapper)
+//                .lineTokenizer(lineTokenizer)
+//                .fieldSetMapper(fieldSetMapper)
                 .build();
     }
 }

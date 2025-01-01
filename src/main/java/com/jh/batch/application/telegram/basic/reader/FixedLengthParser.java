@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class FixedLengthParser {
 
     public static FixedLengthTokenizer createTokenizer(Class<?> clazz) {
@@ -19,7 +20,7 @@ public class FixedLengthParser {
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(FixedLengthTelegram.class)) {
                 FixedLengthTelegram annotation = field.getAnnotation(FixedLengthTelegram.class);
-                ranges.add(new Range(annotation.start(), annotation.end()));
+//                ranges.add(new Range(annotation.start(), annotation.end()));
                 names.add(field.getName()); // 필드명 추가
             }
         }

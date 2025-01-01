@@ -6,6 +6,7 @@ import org.springframework.batch.item.file.transform.FieldSet;
 
 import java.lang.reflect.Field;
 
+@Deprecated
 public class FixedLengthFieldSetMapper<T> implements FieldSetMapper<T> {
 
     private final Class<T> type;
