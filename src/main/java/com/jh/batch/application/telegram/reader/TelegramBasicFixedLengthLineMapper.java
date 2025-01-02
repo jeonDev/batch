@@ -1,7 +1,7 @@
-package com.jh.batch.application.telegram.basic.reader;
+package com.jh.batch.application.telegram.reader;
 
-import com.jh.batch.application.telegram.basic.type.FixedLengthTelegram;
-import com.jh.batch.application.telegram.basic.type.TelegramFieldType;
+import com.jh.batch.application.telegram.type.FixedLengthTelegram;
+import com.jh.batch.application.telegram.type.TelegramFieldType;
 import org.springframework.batch.item.file.LineMapper;
 
 import java.lang.reflect.Field;

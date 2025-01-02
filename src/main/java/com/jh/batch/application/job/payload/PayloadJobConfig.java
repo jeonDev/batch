@@ -2,8 +2,8 @@ package com.jh.batch.application.job.payload;
 
 import com.jh.batch.application.job.basic.BasicRequest;
 import com.jh.batch.application.job.basic.BasicResponse;
-import com.jh.batch.application.telegram.basic.reader.TelegramBasicItemReaderBuilder;
-import com.jh.batch.application.telegram.basic.writer.TelegramBasicItemWriterBuilder;
+import com.jh.batch.application.telegram.reader.TelegramBasicItemReaderBuilder;
+import com.jh.batch.application.telegram.writer.TelegramBasicItemWriterBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

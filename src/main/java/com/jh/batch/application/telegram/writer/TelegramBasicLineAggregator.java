@@ -1,7 +1,7 @@
-package com.jh.batch.application.telegram.basic.writer;
+package com.jh.batch.application.telegram.writer;
 
-import com.jh.batch.application.telegram.basic.type.FixedLengthTelegram;
-import com.jh.batch.application.telegram.basic.type.TelegramFieldType;
+import com.jh.batch.application.telegram.type.FixedLengthTelegram;
+import com.jh.batch.application.telegram.type.TelegramFieldType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.file.transform.LineAggregator;
 

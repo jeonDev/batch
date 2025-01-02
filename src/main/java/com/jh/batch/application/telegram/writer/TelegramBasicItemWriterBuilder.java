@@ -1,11 +1,9 @@
-package com.jh.batch.application.telegram.basic.writer;
+package com.jh.batch.application.telegram.writer;
 
-import com.jh.batch.application.job.basic.BasicResponse;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.transform.LineAggregator;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 
 public class TelegramBasicItemWriterBuilder<T> {

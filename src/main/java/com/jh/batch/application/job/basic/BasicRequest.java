@@ -1,7 +1,7 @@
 package com.jh.batch.application.job.basic;
 
-import com.jh.batch.application.telegram.basic.type.FixedLengthTelegram;
-import com.jh.batch.application.telegram.basic.type.TelegramFieldType;
+import com.jh.batch.application.telegram.type.FixedLengthTelegram;
+import com.jh.batch.application.telegram.type.TelegramFieldType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
