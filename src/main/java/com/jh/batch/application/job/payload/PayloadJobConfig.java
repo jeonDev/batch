@@ -4,6 +4,7 @@ import com.jh.batch.application.job.basic.BasicResponse;
 import com.jh.batch.application.job.payload.request.PayloadBodyRequest;
 import com.jh.batch.application.job.payload.request.PayloadHeaderRequest;
 import com.jh.batch.application.job.payload.request.PayloadTrailerRequest;
+import com.jh.batch.application.telegram.processor.TelegramPayloadItemProcessor;
 import com.jh.batch.application.telegram.reader.TelegramPayloadFixedLengthLineMapper;
 import com.jh.batch.application.telegram.reader.TelegramPayloadItemReaderBuilder;
 import com.jh.batch.application.telegram.type.TelegramRecord;
@@ -15,7 +16,6 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.LineMapper;
@@ -60,7 +60,8 @@ public class PayloadJobConfig {
     }
 
     private FlatFileItemReader<TelegramRecord> itemReader() {
-        LineMapper<TelegramRecord> lineMapper = TelegramPayloadFixedLengthLineMapper.of(PayloadHeaderRequest.class, "HH",
+        LineMapper<TelegramRecord> lineMapper = TelegramPayloadFixedLengthLineMapper.of(
+                PayloadHeaderRequest.class, "HH",
                 PayloadBodyRequest.class, "BB",
                 PayloadTrailerRequest.class, "TT");
         return new TelegramPayloadItemReaderBuilder<>("payloadItemReader", lineMapper)
@@ -68,11 +69,25 @@ public class PayloadJobConfig {
                 .build();
     }
 
-    private ItemProcessor<TelegramRecord, BasicResponse> itemProcessor() {
-        return item -> {
-            log.info(item.toString());
-//            return new BasicResponse(item.getA(), item.getB(), item.getC(), item.getD());
-            return null;
+    private TelegramPayloadItemProcessor<PayloadHeaderRequest, PayloadBodyRequest, PayloadTrailerRequest, BasicResponse> itemProcessor() {
+        return new TelegramPayloadItemProcessor<>() {
+            @Override
+            protected BasicResponse headerProcess(PayloadHeaderRequest item) {
+                log.info("header Process : {}", item.toString());
+                return null;
+            }
+
+            @Override
+            protected BasicResponse bodyProcess(PayloadBodyRequest item) {
+                log.info("body Process : {}", item.toString());
+                return null;
+            }
+
+            @Override
+            protected BasicResponse trailerProcess(PayloadTrailerRequest item) {
+                log.info("trailer Process : {}", item.toString());
+                return null;
+            }
         };
     }
 

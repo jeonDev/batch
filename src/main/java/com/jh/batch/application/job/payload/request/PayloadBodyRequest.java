@@ -3,6 +3,7 @@ package com.jh.batch.application.job.payload.request;
 import com.jh.batch.application.telegram.type.FixedLengthTelegram;
 import com.jh.batch.application.telegram.type.TelegramFieldType;
 import com.jh.batch.application.telegram.type.TelegramRecord;
+import com.jh.batch.application.telegram.type.TelegramType;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -20,4 +21,9 @@ public class PayloadBodyRequest implements TelegramRecord {
     @FixedLengthTelegram(size = 10, fieldType = TelegramFieldType.DECIMAL, point = 2)
     private BigDecimal data3;
 
+
+    @Override
+    public TelegramType getTelegramType() {
+        return TelegramType.BODY;
+    }
 }
