@@ -58,11 +58,11 @@ public class TelegramPayloadFixedLengthLineMapper<H extends TelegramRecord, B ex
 
     private Class<?> typeParser(String division) {
         if (header.division().equals(division)) {
-            return header.getClass();
+            return header.data();
         } else if (body.division().equals(division)) {
-            return body.getClass();
+            return body.data();
         } else if (trailer.division().equals(division)) {
-            return trailer.getClass();
+            return trailer.data();
         }
         throw new IllegalArgumentException("Division Type Error");
     }
