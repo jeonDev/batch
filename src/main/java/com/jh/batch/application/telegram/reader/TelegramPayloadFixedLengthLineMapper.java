@@ -21,8 +21,12 @@ public class TelegramPayloadFixedLengthLineMapper<H extends TelegramRecord, B ex
         this.trailer = trailer;
     }
 
-    public static <H extends TelegramRecord, B extends TelegramRecord, T extends TelegramRecord> TelegramPayloadFixedLengthLineMapper<H, B, T> of(Telegram<H> header, Telegram<B> body, Telegram<T> trailer) {
-        return new TelegramPayloadFixedLengthLineMapper<>(header, body, trailer);
+    public static <H extends TelegramRecord, B extends TelegramRecord, T extends TelegramRecord> TelegramPayloadFixedLengthLineMapper<H, B, T> of(Class<H> headerType, String headerDivision, Class<B> bodyType,  String bodyDivision, Class<T> trailerType, String trailerDivision) {
+        return new TelegramPayloadFixedLengthLineMapper<>(
+                new Telegram<>(headerType, headerDivision),
+                new Telegram<>(bodyType, bodyDivision),
+                new Telegram<>(trailerType, trailerDivision)
+        );
     }
 
     @Override
