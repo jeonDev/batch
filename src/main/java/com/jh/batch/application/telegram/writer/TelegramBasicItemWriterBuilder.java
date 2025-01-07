@@ -14,11 +14,15 @@ public class TelegramBasicItemWriterBuilder<T> {
 
     public TelegramBasicItemWriterBuilder(String name) {
         this.name = name;
-        this.lineAggregator = new TelegramBasicLineAggregator<>();
     }
 
     public TelegramBasicItemWriterBuilder<T> filePath(String filePath) {
         this.resource = new FileSystemResource(filePath);
+        return this;
+    }
+
+    public TelegramBasicItemWriterBuilder<T> lineAggregator(LineAggregator<T> lineAggregator) {
+        this.lineAggregator = lineAggregator;
         return this;
     }
 

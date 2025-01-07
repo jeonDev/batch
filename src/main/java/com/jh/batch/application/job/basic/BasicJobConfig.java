@@ -2,6 +2,7 @@ package com.jh.batch.application.job.basic;
 
 import com.jh.batch.application.telegram.reader.TelegramBasicItemReaderBuilder;
 import com.jh.batch.application.telegram.writer.TelegramBasicItemWriterBuilder;
+import com.jh.batch.application.telegram.writer.TelegramBasicLineAggregator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -68,6 +69,7 @@ public class BasicJobConfig {
     private FlatFileItemWriter<BasicResponse> itemWriter() {
         return new TelegramBasicItemWriterBuilder<BasicResponse>("basicItemWriter")
                 .filePath(sndFilePath)
+                .lineAggregator(new TelegramBasicLineAggregator<>())
                 .build();
 
     }

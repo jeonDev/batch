@@ -1,14 +1,18 @@
 package com.jh.batch.application.job.payload;
 
-import com.jh.batch.application.job.basic.BasicResponse;
 import com.jh.batch.application.job.payload.request.PayloadBodyRequest;
 import com.jh.batch.application.job.payload.request.PayloadHeaderRequest;
 import com.jh.batch.application.job.payload.request.PayloadTrailerRequest;
+import com.jh.batch.application.job.payload.response.PayloadBodyResponse;
+import com.jh.batch.application.job.payload.response.PayloadHeaderResponse;
+import com.jh.batch.application.job.payload.response.PayloadTrailerResponse;
 import com.jh.batch.application.telegram.processor.TelegramPayloadItemProcessor;
 import com.jh.batch.application.telegram.reader.TelegramPayloadFixedLengthLineMapper;
 import com.jh.batch.application.telegram.reader.TelegramPayloadItemReaderBuilder;
 import com.jh.batch.application.telegram.type.TelegramRecord;
+import com.jh.batch.application.telegram.type.TelegramResponse;
 import com.jh.batch.application.telegram.writer.TelegramBasicItemWriterBuilder;
+import com.jh.batch.application.telegram.writer.TelegramPayloadLineAggregator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -52,7 +56,7 @@ public class PayloadJobConfig {
     @Bean
     public Step payloadStep() {
         return new StepBuilder("payloadStep", jobRepository)
-                .<TelegramRecord, BasicResponse>chunk(10, transactionManager)
+                .<TelegramRecord, TelegramResponse>chunk(10, transactionManager)
                 .reader(itemReader())
                 .processor(itemProcessor())
                 .writer(itemWriter())
@@ -69,32 +73,43 @@ public class PayloadJobConfig {
                 .build();
     }
 
-    private TelegramPayloadItemProcessor<PayloadHeaderRequest, PayloadBodyRequest, PayloadTrailerRequest, BasicResponse> itemProcessor() {
+    private TelegramPayloadItemProcessor<PayloadHeaderRequest, PayloadBodyRequest, PayloadTrailerRequest, TelegramResponse> itemProcessor() {
         return new TelegramPayloadItemProcessor<>() {
             @Override
-            protected BasicResponse headerProcess(PayloadHeaderRequest item) {
+            protected TelegramResponse headerProcess(PayloadHeaderRequest item) {
                 log.info("header Process : {}", item.toString());
-                return null;
+                return PayloadHeaderResponse.builder()
+                        .division(item.getDivision())
+                        .data1(item.getData1())
+                        .build();
             }
 
             @Override
-            protected BasicResponse bodyProcess(PayloadBodyRequest item) {
+            protected TelegramResponse bodyProcess(PayloadBodyRequest item) {
                 log.info("body Process : {}", item.toString());
-                return null;
+                return PayloadBodyResponse.builder()
+                        .division(item.getDivision())
+                        .data1(item.getData1())
+                        .data2(item.getData2())
+                        .data3(item.getData3())
+                        .build();
             }
 
             @Override
-            protected BasicResponse trailerProcess(PayloadTrailerRequest item) {
+            protected TelegramResponse trailerProcess(PayloadTrailerRequest item) {
                 log.info("trailer Process : {}", item.toString());
-                return null;
+                return PayloadTrailerResponse.builder()
+                        .division(item.getDivision())
+                        .data1(item.getData1())
+                        .build();
             }
         };
     }
 
-    private FlatFileItemWriter<BasicResponse> itemWriter() {
-        return new TelegramBasicItemWriterBuilder<BasicResponse>("payloadItemWriter")
+    private FlatFileItemWriter<TelegramResponse> itemWriter() {
+        return new TelegramBasicItemWriterBuilder<TelegramResponse>("payloadItemWriter")
                 .filePath(sndFilePath)
+                .lineAggregator(new TelegramPayloadLineAggregator<>())
                 .build();
-
     }
 }
