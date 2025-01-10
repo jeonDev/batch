@@ -19,4 +19,9 @@ public class PayServiceImpl implements PayService {
     public List<Pay> reader() {
         return null;
     }
+
+    @Override
+    public List<Pay> findByRequestDate(String requestDate) {
+        return null;
+    }
 }

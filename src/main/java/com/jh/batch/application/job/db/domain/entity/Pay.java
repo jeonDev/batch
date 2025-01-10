@@ -13,6 +13,9 @@ public class Pay {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "requestDate")
+    private String requestDate;
+
     @Column(name = "sendMemberSeq")
     private Long sendMemberSeq;
 
