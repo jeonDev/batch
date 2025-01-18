@@ -10,5 +10,7 @@ spring:
     password: testdb
 
   batch:
+    jdbc:
+      initialize-schema: always
     job:
       enabled: false
