@@ -1,11 +1,13 @@
 package com.jh.batch.application.job.db.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "PAY")
 public class Pay {

@@ -1,27 +1,24 @@
 package com.jh.batch.application.job.db.service.impl;
 
-import com.jh.batch.application.job.db.domain.PayDao;
-import com.jh.batch.application.job.db.domain.entity.Pay;
+import com.jh.batch.application.job.db.domain.BalanceDao;
+import com.jh.batch.application.job.db.domain.entity.Balance;
 import com.jh.batch.application.job.db.service.PayService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PayServiceImpl implements PayService {
 
-    private final PayDao payDao;
+    private final BalanceDao balanceDao;
 
-    public PayServiceImpl(PayDao payDao) {
-        this.payDao = payDao;
-    }
 
-    public List<Pay> reader() {
-        return null;
+    public PayServiceImpl(BalanceDao balanceDao) {
+        this.balanceDao = balanceDao;
     }
 
     @Override
-    public List<Pay> findByRequestDate(String requestDate) {
-        return null;
+    public Optional<Balance> findByBalance(Long memberSeq) {
+        return balanceDao.findByMemberSeq(memberSeq);
     }
 }

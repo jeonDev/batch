@@ -1,7 +1,10 @@
 package com.jh.batch.application.job.db;
 
+import com.jh.batch.application.job.db.domain.entity.Balance;
 import com.jh.batch.application.job.db.domain.entity.Pay;
 import com.jh.batch.application.job.db.service.PayService;
+import jakarta.persistence.EntityManagerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -11,36 +14,50 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.List;
+import javax.sql.DataSource;
+import java.util.Optional;
 
+@Slf4j
 @Configuration
 public class DbJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
+    private final DataSource dataSource;
+    private final EntityManagerFactory emf;
     private final PayService payService;
+    private final int chunkSize = 1;
 
-    public DbJobConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, PayService payService) {
+    public DbJobConfig(JobRepository jobRepository,
+                       PlatformTransactionManager transactionManager,
+                       DataSource dataSource,
+                       PayService payService,
+                       EntityManagerFactory entityManagerFactory) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
+        this.dataSource = dataSource;
         this.payService = payService;
+        this.emf = entityManagerFactory;
     }
 
     @Bean
-    public Job dbJob(Step basicStep) {
+    public Job dbJob(Step dbStep) {
         return new JobBuilder("dbJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(basicStep)
+                .start(dbStep)
                 .build();
     }
 
     @Bean
-    public Step basicStep() {
-        return new StepBuilder("basicStep", jobRepository)
-                .<Pay, Object>chunk(10, transactionManager)
+    public Step dbStep() {
+        return new StepBuilder("dbStep", jobRepository)
+                .<Pay, Object>chunk(chunkSize, transactionManager)
                 .reader(itemReader())
                 .processor(itemProcessor())
                 .writer(itemWriter())
@@ -48,18 +65,30 @@ public class DbJobConfig {
     }
 
     private ItemReader<Pay> itemReader() {
-        // TODO: jobParameter
-        List<Pay> list = payService.findByRequestDate("");
-        return null;
+        return new JdbcCursorItemReaderBuilder<Pay>()
+                .name("jdbcCursorDbItemReader")
+                .fetchSize(chunkSize)
+                .dataSource(dataSource)
+                .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
+                .sql("SELECT * FROM PAY")
+                .build();
     }
 
     private ItemProcessor<Pay, Object> itemProcessor() {
         return item -> {
-            return null;
+            log.info("item : {}", item.toString());
+            Optional<Balance> optionalBalance = payService.findByBalance(item.getReceiveMemberSeq());
+            return optionalBalance.isPresent() ? optionalBalance.get().addBalance(item.getAmount()) :
+                    Balance.builder()
+                            .balance(item.getAmount())
+                            .memberSeq(item.getReceiveMemberSeq())
+                            .build();
         };
     }
 
     private ItemWriter<Object> itemWriter() {
-        return null;
+        return new JpaItemWriterBuilder<>()
+                .entityManagerFactory(emf)
+                .build();
     }
 }

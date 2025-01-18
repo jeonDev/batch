@@ -12,18 +12,21 @@ public class JobStarter {
 
     private final Job basicJob;
     private final Job payloadJob;
+    private final Job dbJob;
 
-    public JobStarter(Job basicJob, Job payloadJob) {
+    public JobStarter(Job basicJob, Job payloadJob, Job dbJob) {
         this.basicJob = basicJob;
         this.payloadJob = payloadJob;
+        this.dbJob = dbJob;
     }
 
     @Bean
     public ApplicationRunner runner(JobLauncher jobLauncher) {
         return args -> {
             JobParameters jobParameters = new JobParameters();
-            jobLauncher.run(basicJob, jobParameters);
-            jobLauncher.run(payloadJob, jobParameters);
+//            jobLauncher.run(basicJob, jobParameters);
+//            jobLauncher.run(payloadJob, jobParameters);
+            jobLauncher.run(dbJob, jobParameters);
         };
     }
 }
