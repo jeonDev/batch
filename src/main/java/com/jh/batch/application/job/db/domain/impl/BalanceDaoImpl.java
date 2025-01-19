@@ -22,7 +22,7 @@ public class BalanceDaoImpl implements BalanceDao {
 
     @Override
     public Optional<Balance> findByMemberSeq(Long memberSeq) {
-        return balanceRepository.findById(memberSeq);
+        return balanceRepository.findByMemberSeq(memberSeq);
     }
 
     @Override
