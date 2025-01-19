@@ -57,6 +57,7 @@ public class DbJobConfig {
     public Step dbStep() {
         return new StepBuilder("dbStep", jobRepository)
                 .<Pay, Object>chunk(chunkSize, transactionManager)
+                .allowStartIfComplete(true)
                 .reader(itemReader())
                 .processor(itemProcessor())
                 .writer(itemWriter())
