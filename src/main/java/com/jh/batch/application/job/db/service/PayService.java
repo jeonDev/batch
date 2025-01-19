@@ -1,9 +1,8 @@
 package com.jh.batch.application.job.db.service;
 
 import com.jh.batch.application.job.db.domain.entity.Balance;
-
-import java.util.Optional;
+import com.jh.batch.application.job.db.domain.entity.Pay;
 
 public interface PayService {
-    Optional<Balance> findByBalance(Long memberSeq);
+    Balance process(Pay pay);
 }

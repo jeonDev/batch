@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface BalanceDao {
 
     Optional<Balance> findByMemberSeq(Long memberSeq);
+    void persist(Balance balance);
 }

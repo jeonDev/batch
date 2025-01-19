@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.Optional;
 
 @Slf4j
 @Configuration
@@ -75,15 +74,7 @@ public class DbJobConfig {
     }
 
     private ItemProcessor<Pay, Object> itemProcessor() {
-        return item -> {
-            log.info("item : {}", item.toString());
-            Optional<Balance> optionalBalance = payService.findByBalance(item.getReceiveMemberSeq());
-            return optionalBalance.isPresent() ? optionalBalance.get().addBalance(item.getAmount()) :
-                    Balance.builder()
-                            .balance(item.getAmount())
-                            .memberSeq(item.getReceiveMemberSeq())
-                            .build();
-        };
+        return payService::process;
     }
 
     private ItemWriter<Object> itemWriter() {
