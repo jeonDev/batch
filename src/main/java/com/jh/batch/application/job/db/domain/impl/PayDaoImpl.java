@@ -1,6 +1,7 @@
 package com.jh.batch.application.job.db.domain.impl;
 
 import com.jh.batch.application.job.db.domain.PayDao;
+import com.jh.batch.application.job.db.domain.entity.Pay;
 import com.jh.batch.application.job.db.domain.entity.PayRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,8 @@ public class PayDaoImpl implements PayDao {
         this.payRepository = payRepository;
     }
 
-
+    @Override
+    public Pay save(Pay pay) {
+        return payRepository.save(pay);
+    }
 }

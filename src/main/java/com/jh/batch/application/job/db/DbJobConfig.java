@@ -70,7 +70,7 @@ public class DbJobConfig {
                 .fetchSize(chunkSize)
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
-                .sql("SELECT * FROM PAY")
+                .sql("SELECT * FROM PAY WHERE STATUS = 'READY'")
                 .build();
     }
 

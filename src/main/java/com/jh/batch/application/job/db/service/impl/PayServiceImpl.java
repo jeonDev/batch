@@ -1,6 +1,7 @@
 package com.jh.batch.application.job.db.service.impl;
 
 import com.jh.batch.application.job.db.domain.BalanceDao;
+import com.jh.batch.application.job.db.domain.PayDao;
 import com.jh.batch.application.job.db.domain.entity.Balance;
 import com.jh.batch.application.job.db.domain.entity.Pay;
 import com.jh.batch.application.job.db.service.PayService;
@@ -13,10 +14,12 @@ import java.util.Optional;
 @Service
 public class PayServiceImpl implements PayService {
 
+    private final PayDao payDao;
     private final BalanceDao balanceDao;
 
-
-    public PayServiceImpl(BalanceDao balanceDao) {
+    public PayServiceImpl(PayDao payDao,
+                          BalanceDao balanceDao) {
+        this.payDao = payDao;
         this.balanceDao = balanceDao;
     }
 
@@ -24,6 +27,8 @@ public class PayServiceImpl implements PayService {
     public Balance process(Pay item) {
 
         log.info("item : {}", item.toString());
+        item.payComplete();
+        payDao.save(item);
         Optional<Balance> optionalBalance = balanceDao.findByMemberSeq(item.getReceiveMemberSeq());
 
         if (optionalBalance.isEmpty()) {

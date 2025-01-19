@@ -1,5 +1,6 @@
 package com.jh.batch.application.job.db.domain.entity;
 
+import com.jh.batch.application.job.db.type.PayStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,4 +27,12 @@ public class Pay {
 
     @Column(name = "amount")
     private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS")
+    private PayStatus payStatus;
+
+    public void payComplete() {
+        this.payStatus = PayStatus.COMPLETE;
+    }
 }
