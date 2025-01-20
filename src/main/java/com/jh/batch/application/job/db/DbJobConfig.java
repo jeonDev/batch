@@ -1,12 +1,12 @@
 package com.jh.batch.application.job.db;
 
-import com.jh.batch.application.job.db.domain.entity.Balance;
 import com.jh.batch.application.job.db.domain.entity.Pay;
 import com.jh.batch.application.job.db.service.PayService;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -16,6 +16,7 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -31,7 +32,7 @@ public class DbJobConfig {
     private final DataSource dataSource;
     private final EntityManagerFactory emf;
     private final PayService payService;
-    private final int chunkSize = 1;
+    private final int chunkSize = 10;
 
     public DbJobConfig(JobRepository jobRepository,
                        PlatformTransactionManager transactionManager,
@@ -54,23 +55,25 @@ public class DbJobConfig {
     }
 
     @Bean
-    public Step dbStep() {
+    @JobScope
+    public Step dbStep(@Value("#{jobParameters[dt]}") String dt) {
         return new StepBuilder("dbStep", jobRepository)
                 .<Pay, Object>chunk(chunkSize, transactionManager)
                 .allowStartIfComplete(true)
-                .reader(itemReader())
+                .reader(itemReader(dt))
                 .processor(itemProcessor())
                 .writer(itemWriter())
                 .build();
     }
 
-    private ItemReader<Pay> itemReader() {
+    private ItemReader<Pay> itemReader(String dt) {
         return new JdbcCursorItemReaderBuilder<Pay>()
                 .name("jdbcCursorDbItemReader")
                 .fetchSize(chunkSize)
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
-                .sql("SELECT * FROM PAY WHERE STATUS = 'READY'")
+                .sql("SELECT * FROM PAY WHERE STATUS = 'READY' AND REQUEST_DATE = ?")
+                .preparedStatementSetter(ps -> ps.setString(1, dt))
                 .build();
     }
 
