@@ -21,3 +21,7 @@ spring:
       initialize-schema: always
     job:
       enabled: false
+logging:
+  level:
+    org.springframework.jdbc.core: DEBUG
+    org.springframework.batch.item.database: DEBUG
