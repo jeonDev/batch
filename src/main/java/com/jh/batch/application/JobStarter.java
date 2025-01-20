@@ -26,6 +26,7 @@ public class JobStarter {
         return args -> {
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("dt", "20250120")
+                    .addLong("run.id", System.currentTimeMillis()) // 같은 Job Parameter 성공 시, 재 실행을 위함
                     .toJobParameters();
 
 //            jobLauncher.run(basicJob, jobParameters);
