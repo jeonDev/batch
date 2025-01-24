@@ -1,6 +1,6 @@
 package com.jh.batch.endpoint;
 
-import com.jh.batch.application.JobExecutor;
+import com.jh.batch.common.executor.JobExecutor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
