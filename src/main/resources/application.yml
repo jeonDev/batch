@@ -15,7 +15,9 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-
+  sql:
+    init:
+      mode: always
   batch:
     jdbc:
       initialize-schema: always

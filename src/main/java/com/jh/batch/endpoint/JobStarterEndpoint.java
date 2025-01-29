@@ -23,11 +23,11 @@ public class JobStarterEndpoint {
     }
 
     @GetMapping("/v1/job/{jobName}")
-    public String jobExecute(@PathVariable(name = "jobName") String jobName, @RequestParam(name = "dt") String dt) {
+    public String jobExecute(@PathVariable(name = "jobName") String jobName, @RequestParam(name = "dt", required = false) String dt) {
 
         Job job = applicationContext.getBean(jobName, Job.class);
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("dt", dt)
+//                .addString("dt", dt)
                 .addLong("run.id", System.currentTimeMillis())
                 .toJobParameters();
         jobExecutor.execute(job, jobParameters);
