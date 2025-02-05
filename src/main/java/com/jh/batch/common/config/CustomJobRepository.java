@@ -2,13 +2,11 @@ package com.jh.batch.common.config;
 
 import com.jh.batch.common.domain.JobRepositoryDao;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobInstance;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Slf4j
@@ -24,7 +22,6 @@ public class CustomJobRepository implements JobRepository {
     @Override
     public boolean isJobInstanceExists(String jobName, JobParameters jobParameters) {
         log.info("isJobInstanceExists");
-        // job parameter 중복여부 체크
         return false;
     }
 
@@ -40,7 +37,13 @@ public class CustomJobRepository implements JobRepository {
     public JobExecution createJobExecution(String jobName, JobParameters jobParameters) {
         log.info("createJobExecution : {}", jobName);
         JobInstance jobInstance = this.createJobInstance(jobName, jobParameters);
-        return new JobExecution(jobInstance, jobParameters.getLong(jobName), jobParameters);
+        JobExecution jobExecution = new JobExecution(jobInstance, jobParameters.getLong(jobName), jobParameters);
+        jobExecution.setStartTime(LocalDateTime.now());
+        jobExecution.setCreateTime(LocalDateTime.now());
+        jobExecution.setId(1L);
+        jobExecution.setStatus(BatchStatus.STARTED);
+        jobExecution.setVersion(1);
+        return jobExecution;
     }
 
     // 1. AbstractJob -> update
