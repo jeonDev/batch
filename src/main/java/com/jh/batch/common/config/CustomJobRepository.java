@@ -12,6 +12,7 @@ import java.util.Collection;
 @Slf4j
 @Component
 public class CustomJobRepository implements JobRepository {
+    // getLastJobExecution -> createJobExecution -> createJobInstance -> (TaskExecutorJobLauncher) -> update Job -> getLastStepExecution -> getStepExecutionCount -> addStep -> (SimpleStepHandler) -> updateStep -> updateExecutionContext
 
     private final JobRepositoryDao jobRepositoryDao;
 
