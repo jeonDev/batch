@@ -29,9 +29,9 @@ public class CustomJobRepository implements JobRepository {
     @Override
     public JobInstance createJobInstance(String jobName, JobParameters jobParameters) {
         log.info("createJobInstance : {}", jobName);
-        Long l = jobRepositoryDao.jobInstanceSave(jobName, jobParameters);
 
-        return new JobInstance(l, jobName);
+        return jobRepositoryDao.jobInstanceSave(jobName, jobParameters)
+                .entityToBatchJobInstance();
     }
 
     @Override

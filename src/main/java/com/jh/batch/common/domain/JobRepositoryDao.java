@@ -1,9 +1,10 @@
 package com.jh.batch.common.domain;
 
+import com.jh.batch.common.domain.entity.JobInstance;
 import org.springframework.batch.core.JobParameters;
 
 public interface JobRepositoryDao {
 
-    Long jobInstanceSave(String jobName, JobParameters jobParameters);
+    JobInstance jobInstanceSave(String jobName, JobParameters jobParameters);
 
 }
