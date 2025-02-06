@@ -6,7 +6,6 @@ import org.springframework.batch.core.*;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Slf4j
@@ -36,15 +35,16 @@ public class CustomJobRepository implements JobRepository {
 
     @Override
     public JobExecution createJobExecution(String jobName, JobParameters jobParameters) {
+        // 1:N JobInstance : JobExecution
+        // Job 실행 -> JobInstance / JobExecution 생성
+        // 2번째 실행 -> JobInstance 그대로 / JobExecution 생성
+        // Job Parameter 다른 job 실행 : JobInstance / JobExecution 생성
+        // 재실행 구분은 어떻게?? 일단 고
+
         log.info("createJobExecution : {}", jobName);
         JobInstance jobInstance = this.createJobInstance(jobName, jobParameters);
-        JobExecution jobExecution = new JobExecution(jobInstance, jobParameters.getLong(jobName), jobParameters);
-        jobExecution.setStartTime(LocalDateTime.now());
-        jobExecution.setCreateTime(LocalDateTime.now());
-        jobExecution.setId(1L);
-        jobExecution.setStatus(BatchStatus.STARTED);
-        jobExecution.setVersion(1);
-        return jobExecution;
+        return jobRepositoryDao.jobExecutionSave(jobInstance.getInstanceId())
+                .entityToBatchJobExecution(jobInstance, jobParameters);
     }
 
     // 1. AbstractJob -> update
