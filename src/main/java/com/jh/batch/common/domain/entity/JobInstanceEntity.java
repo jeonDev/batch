@@ -2,6 +2,7 @@ package com.jh.batch.common.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.JobParameters;
 
@@ -32,5 +33,9 @@ public class JobInstanceEntity {
         JobInstance jobInstance = new JobInstance(getId(), getJobName());
         jobInstance.setVersion(getVersion());
         return jobInstance;
+    }
+
+    public void update(JobExecution jobExecution) {
+
     }
 }

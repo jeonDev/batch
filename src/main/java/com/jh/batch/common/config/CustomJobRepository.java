@@ -51,7 +51,7 @@ public class CustomJobRepository implements JobRepository {
     @Override
     public void update(JobExecution jobExecution) {
         log.info("update Job! : {}", jobExecution.toString());
-
+        jobRepositoryDao.jobUpdate(jobExecution);
     }
 
     @Override

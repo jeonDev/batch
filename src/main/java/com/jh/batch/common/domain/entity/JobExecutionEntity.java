@@ -1,11 +1,9 @@
 package com.jh.batch.common.domain.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.*;
-import org.springframework.batch.core.BatchStatus;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobInstance;
-import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.*;
 
 import java.time.LocalDateTime;
 
@@ -26,8 +24,9 @@ public class JobExecutionEntity {
     @Enumerated(EnumType.STRING)
     private BatchStatus status;
 
-    @Enumerated(EnumType.STRING)
-    private BatchStatus exitStatus;
+    private String exitStatus;
+    @Column(length = 500)
+    private String exitDescription;
     private LocalDateTime startTime;
     private LocalDateTime createTime;
     private LocalDateTime endTime;
@@ -51,6 +50,15 @@ public class JobExecutionEntity {
         jobExecution.setStatus(status);
         jobExecution.setVersion(version);
         return jobExecution;
+    }
+
+    public void update(JobExecution jobExecution) {
+        this.endTime = jobExecution.getEndTime();
+        this.lastUpdated = jobExecution.getLastUpdated();
+        this.status = jobExecution.getStatus();
+        this.exitStatus = jobExecution.getExitStatus().getExitCode();
+        String exitDescription = jobExecution.getExitStatus().getExitDescription();
+        this.exitDescription = exitDescription.length() > 500 ? exitDescription.substring(0, 500) : exitDescription;
     }
 
 }
